@@ -30,7 +30,13 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'must_change_password' => false,
         ];
+    }
+
+    public function mustChangePassword(): static
+    {
+        return $this->state(fn (array $attributes) => ['must_change_password' => true]);
     }
 
     /**
