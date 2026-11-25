@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Data\AdminSiteData;
+use App\Support\CurrentSite;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,6 +43,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'adminSites' => fn () => $request->user()
+                ? $request->user()->sites()->orderBy('name')->get()->map(AdminSiteData::fromSite(...))->values()->all()
+                : [],
+            'currentSite' => fn () => ($site = app(CurrentSite::class)->get()) ? AdminSiteData::fromSite($site) : null,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
