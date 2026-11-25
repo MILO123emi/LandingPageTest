@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { Check, ChevronsUpDown, Store } from '@lucide/vue';
-import { computed } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,18 +14,29 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 
 const page = usePage();
 const adminSites = computed(() => page.props.adminSites);
 const currentSite = computed(() => page.props.currentSite);
+
+const open = ref(false);
+const { setOpenMobile } = useSidebar();
+
+const stopListening = router.on('navigate', () => {
+    open.value = false;
+    setOpenMobile(false);
+});
+
+onUnmounted(stopListening);
 </script>
 
 <template>
     <SidebarMenu v-if="adminSites.length > 1">
         <SidebarMenuItem>
-            <DropdownMenu>
+            <DropdownMenu v-model:open="open">
                 <DropdownMenuTrigger as-child>
                     <SidebarMenuButton size="lg">
                         <div class="flex size-8 items-center justify-center rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
