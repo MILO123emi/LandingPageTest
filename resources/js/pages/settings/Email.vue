@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Form, Head, usePage } from '@inertiajs/vue3';
+import { REGEXP_ONLY_DIGITS } from 'vue-input-otp';
 import { ref, watch } from 'vue';
 import EmailController from '@/actions/App/Http/Controllers/Settings/EmailController';
 import Heading from '@/components/Heading.vue';
@@ -29,7 +30,7 @@ defineOptions({ layout: { breadcrumbs: [{ title: 'Correo', href: edit() }] } });
             <Form v-bind="EmailController.update.form()" class="space-y-6" v-slot="{ errors, processing }">
                 <div class="grid gap-2">
                     <Label for="code">Código</Label>
-                    <InputOTP id="code" name="code" :maxlength="6" inputmode="numeric" autocomplete="one-time-code" v-focus>
+                    <InputOTP id="code" name="code" :maxlength="6" inputmode="numeric" autocomplete="one-time-code" autofocus :pattern="REGEXP_ONLY_DIGITS">
                         <InputOTPGroup><InputOTPSlot v-for="index in 6" :key="index" :index="index - 1" /></InputOTPGroup>
                     </InputOTP>
                     <InputError :message="errors.code" />
@@ -39,6 +40,7 @@ defineOptions({ layout: { breadcrumbs: [{ title: 'Correo', href: edit() }] } });
             <Button variant="link" @click="useAnotherEmail = true">Usar otro correo</Button>
         </template>
         <Form v-else v-bind="EmailController.store.form()" class="space-y-6" reset-on-success v-slot="{ errors, processing }" @success="useAnotherEmail = false">
+            <InputError :message="page.props.errors.code" />
             <div class="grid gap-2">
                 <Label for="email">Correo nuevo</Label>
                 <Input id="email" name="email" type="email" autocomplete="email" required v-focus />

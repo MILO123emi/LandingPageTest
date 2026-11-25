@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
+import { REGEXP_ONLY_DIGITS } from 'vue-input-otp';
 import InputError from '@/components/InputError.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import TextLink from '@/components/TextLink.vue';
@@ -19,7 +20,7 @@ defineOptions({ layout: { title: 'Escribí el código' } });
     <Form v-bind="update.form()" class="flex flex-col gap-6" :reset-on-success="['password', 'password_confirmation', 'code']" v-slot="{ errors, processing }">
         <div class="grid gap-2">
             <Label for="code">Código</Label>
-            <InputOTP id="code" name="code" :maxlength="6" inputmode="numeric" autocomplete="one-time-code" v-focus>
+            <InputOTP id="code" name="code" :maxlength="6" inputmode="numeric" autocomplete="one-time-code" autofocus :pattern="REGEXP_ONLY_DIGITS">
                 <InputOTPGroup><InputOTPSlot v-for="index in 6" :key="index" :index="index - 1" /></InputOTPGroup>
             </InputOTP>
             <InputError :message="errors.code" />

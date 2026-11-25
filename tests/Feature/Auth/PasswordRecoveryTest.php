@@ -91,7 +91,8 @@ test('requesting codes is throttled', function () {
     foreach (range(1, 3) as $ignored) {
         $this->post(route('password.recovery.store'), ['email' => 'unknown@example.com'])->assertRedirect();
     }
-    $this->post(route('password.recovery.store'), ['email' => 'unknown@example.com'])->assertTooManyRequests();
+    $this->post(route('password.recovery.store'), ['email' => 'unknown@example.com'])->assertTooManyRequests()
+        ->assertSee('Hiciste demasiados intentos', false);
 });
 
 test('requesting codes is throttled per email across addresses', function () {
