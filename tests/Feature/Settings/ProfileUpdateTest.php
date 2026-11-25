@@ -108,6 +108,25 @@ test('user can delete their account', function () {
     expect($user->fresh())->toBeNull();
 });
 
+test('inertia account deletion performs a full page visit to the public home', function () {
+    $user = User::factory()->create();
+
+    $response = $this
+        ->actingAs($user)
+        ->withHeader('X-Inertia', 'true')
+        ->delete(route('profile.destroy'), [
+            'password' => 'password',
+        ]);
+
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertStatus(409)
+        ->assertHeader('X-Inertia-Location', route('home'));
+
+    $this->assertGuest();
+    expect($user->fresh())->toBeNull();
+});
+
 test('correct password must be provided to delete account', function () {
     $user = User::factory()->create();
 
