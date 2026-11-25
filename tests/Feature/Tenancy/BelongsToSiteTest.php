@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Scopes\SiteScope;
 use App\Models\Site;
 use App\Support\CurrentSite;
 use Illuminate\Database\Schema\Blueprint;
@@ -66,5 +67,5 @@ test('console code can bypass the scope explicitly', function () {
     FixtureNote::create(['body' => 'A', 'site_id' => $this->siteA->id]);
     FixtureNote::create(['body' => 'B', 'site_id' => $this->siteB->id]);
 
-    expect(FixtureNote::withoutGlobalScope(App\Models\Scopes\SiteScope::class)->count())->toBe(2);
+    expect(FixtureNote::withoutGlobalScope(SiteScope::class)->count())->toBe(2);
 });
