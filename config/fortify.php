@@ -86,7 +86,7 @@ return [
     |
     */
 
-    'prefix' => '',
+    'prefix' => trim((string) env('ADMIN_PATH', 'panel-cambiar'), '/'),
 
     'domain' => null,
 
