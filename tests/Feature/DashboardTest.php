@@ -2,9 +2,9 @@
 
 use App\Models\User;
 
-test('guests are redirected to the login page', function () {
+test('guests get a not found response', function () {
     $response = $this->get(route('dashboard'));
-    $response->assertRedirect(route('login'));
+    $response->assertNotFound();
 });
 
 test('authenticated users can visit the dashboard', function () {
