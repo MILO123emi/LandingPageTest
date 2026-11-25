@@ -82,6 +82,14 @@ test('the current password is required', function () {
     Mail::assertNothingSent();
 });
 
+test('a wrong password hides whether the new email is taken', function () {
+    User::factory()->create(['email' => 'taken@example.com']);
+    $this->post(route('email.store'), ['email' => 'taken@example.com', 'current_password' => 'incorrecta-123'])
+        ->assertSessionHasErrors('current_password')
+        ->assertSessionDoesntHaveErrors('email');
+    Mail::assertNothingSent();
+});
+
 test('uppercase and spaces are normalized', function () {
     $code = requestEmailCode($this, ' Nuevo@Example.COM ');
     Mail::assertSent(VerificationCodeMail::class, fn ($mail) => $mail->hasTo('nuevo@example.com'));

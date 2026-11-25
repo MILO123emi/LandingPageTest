@@ -26,6 +26,8 @@ class ForcedPasswordController extends Controller
 
     public function update(ForcedPasswordRequest $request, SetPassword $setPassword): RedirectResponse
     {
+        abort_unless($request->user()->must_change_password, 403);
+
         $setPassword->handle($request->user(), $request->validated('password'), false, $request->session()->getId());
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Contraseña actualizada.']);
 

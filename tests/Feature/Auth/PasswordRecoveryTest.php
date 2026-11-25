@@ -94,6 +94,15 @@ test('requesting codes is throttled', function () {
     $this->post(route('password.recovery.store'), ['email' => 'unknown@example.com'])->assertTooManyRequests();
 });
 
+test('requesting codes is throttled per email across addresses', function () {
+    foreach (['10.0.0.1', '10.0.0.1', '10.0.0.1', '10.0.0.2', '10.0.0.2'] as $ip) {
+        $this->withServerVariables(['REMOTE_ADDR' => $ip])
+            ->post(route('password.recovery.store'), ['email' => 'unknown@example.com'])->assertRedirect();
+    }
+    $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.3'])
+        ->post(route('password.recovery.store'), ['email' => 'unknown@example.com'])->assertTooManyRequests();
+});
+
 test('the old fortify reset routes are gone', function () {
     expect(Route::has('password.request'))->toBeFalse()
         ->and(Route::has('password.email'))->toBeFalse()

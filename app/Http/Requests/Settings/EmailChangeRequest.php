@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 
 class EmailChangeRequest extends FormRequest
 {
+    protected $stopOnFirstFailure = true;
+
     protected function prepareForValidation(): void
     {
         if (is_string($this->input('email'))) {
@@ -18,8 +20,8 @@ class EmailChangeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'current_password' => ['required', 'current_password'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
         ];
     }
 }

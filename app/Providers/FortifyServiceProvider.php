@@ -48,8 +48,15 @@ class FortifyServiceProvider extends ServiceProvider
      */
     private function configureRateLimiting(): void
     {
-        RateLimiter::for('recovery', fn (Request $r) => Limit::perMinutes(10, 3)
-            ->by(Str::lower(trim((string) $r->input('email'))).'|'.$r->ip()));
+        RateLimiter::for('recovery', function (Request $r) {
+            $email = Str::lower(trim((string) $r->input('email')));
+
+            return [
+                Limit::perMinutes(10, 3)->by('pair:'.$email.'|'.$r->ip()),
+                Limit::perHour(5)->by('email:'.$email),
+                Limit::perHour(20)->by('ip:'.$r->ip()),
+            ];
+        });
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());

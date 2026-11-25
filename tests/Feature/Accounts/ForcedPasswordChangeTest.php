@@ -35,3 +35,12 @@ test('admins without the flag skip the change screen', function () {
     $this->actingAs(User::factory()->create())->get(route('password.change'))
         ->assertRedirect(route('dashboard'));
 });
+
+test('admins without the flag cannot set a password without the current one', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user)->put(route('password.change.update'), [
+        'password' => 'clave-nueva-123', 'password_confirmation' => 'clave-nueva-123',
+    ])->assertForbidden();
+
+    expect(Hash::check('clave-nueva-123', $user->refresh()->password))->toBeFalse();
+});

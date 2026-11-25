@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class VerificationCodeMail extends Mailable
 {
-    public function __construct(public string $code, public CodePurpose $purpose) {}
+    public function __construct(#[\SensitiveParameter] public string $code, public CodePurpose $purpose) {}
 
     public function envelope(): Envelope
     {
