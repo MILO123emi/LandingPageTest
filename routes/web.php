@@ -10,7 +10,7 @@ Route::get('/', HomeController::class)->name('home');
 
 Route::redirect('/'.config('vitrina.admin_path'), '/'.config('vitrina.admin_path').'/login')->name('admin.entry');
 
-Route::middleware('auth')->prefix('admin')->group(function () {
+Route::middleware(['auth', 'password.changed'])->prefix('admin')->group(function () {
     Route::get('/', AdminHomeController::class)->name('dashboard');
     Route::get('{site:slug}', SiteDashboardController::class)
         ->middleware('site.manage')

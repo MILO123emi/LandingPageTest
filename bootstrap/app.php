@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsurePasswordChanged;
 use App\Http\Middleware\EnsureUserCanManageSite;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn (): never => abort(404));
         $middleware->alias([
             'site.resolve' => ResolveSite::class,
+            'password.changed' => EnsurePasswordChanged::class,
             'site.manage' => EnsureUserCanManageSite::class,
         ]);
 
