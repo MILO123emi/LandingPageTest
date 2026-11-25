@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
+import { create as recoverPassword } from '@/routes/password/recovery';
 
 defineOptions({
     layout: {
@@ -20,7 +20,6 @@ defineOptions({
 
 defineProps<{
     status?: string;
-    canResetPassword: boolean;
 }>();
 </script>
 
@@ -60,12 +59,11 @@ defineProps<{
                 <div class="flex items-center justify-between">
                     <Label for="password">Password</Label>
                     <TextLink
-                        v-if="canResetPassword"
-                        :href="request()"
+                        :href="recoverPassword()"
                         class="text-sm"
                         :tabindex="5"
                     >
-                        Forgot your password?
+                        ¿Olvidaste tu contraseña?
                     </TextLink>
                 </div>
                 <PasswordInput
