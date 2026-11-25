@@ -1,6 +1,8 @@
 <?php
 
+use App\Mail\VerificationCodeMail;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -13,7 +15,7 @@ test('profile page is displayed', function () {
 });
 
 test('profile information can be updated', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->create(['email' => 'test@example.com']);
 
     $response = $this
         ->actingAs($user)
@@ -33,15 +35,24 @@ test('profile information can be updated', function () {
 });
 
 test('email is stored in lowercase so the user can still log in', function () {
+    Mail::fake();
     $user = User::factory()->create();
 
     $this
         ->actingAs($user)
-        ->patch(route('profile.update'), [
-            'name' => 'Test User',
+        ->post(route('email.store'), [
+            'current_password' => 'password',
             'email' => 'Test@Example.com',
         ])
         ->assertSessionHasNoErrors();
+
+    $code = '';
+    Mail::assertSent(VerificationCodeMail::class, function ($mail) use (&$code) {
+        $code = $mail->code;
+
+        return true;
+    });
+    $this->put(route('email.update'), ['code' => $code])->assertSessionHasNoErrors();
 
     expect($user->refresh()->email)->toBe('test@example.com');
 
@@ -62,13 +73,21 @@ test('email must be unique regardless of case', function () {
 
     $response = $this
         ->actingAs($user)
-        ->from(route('profile.edit'))
-        ->patch(route('profile.update'), [
-            'name' => 'Test User',
+        ->from(route('email.edit'))
+        ->post(route('email.store'), [
+            'current_password' => 'password',
             'email' => 'Taken@Example.com',
         ]);
 
     $response
         ->assertSessionHasErrors('email')
-        ->assertRedirect(route('profile.edit'));
+        ->assertRedirect(route('email.edit'));
+});
+
+test('the profile form cannot change the email', function () {
+    $user = User::factory()->create();
+    $email = $user->email;
+    $this->actingAs($user)->patch(route('profile.update'), ['name' => 'Demo Admin', 'email' => 'nuevo@example.com'])
+        ->assertSessionHasNoErrors();
+    expect($user->refresh()->email)->toBe($email);
 });

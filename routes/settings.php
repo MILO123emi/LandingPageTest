@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\EmailController;
 use App\Http\Controllers\Settings\ForcedPasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\SecurityController;
@@ -17,6 +18,10 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::put('settings/password', [SecurityController::class, 'update'])
         ->middleware('throttle:6,1')
         ->name('user-password.update');
+
+    Route::get('settings/email', [EmailController::class, 'edit'])->name('email.edit');
+    Route::post('settings/email', [EmailController::class, 'store'])->middleware('throttle:3,1')->name('email.store');
+    Route::put('settings/email', [EmailController::class, 'update'])->middleware('throttle:6,1')->name('email.update');
 
     Route::inertia('settings/appearance', 'settings/Appearance')->name('appearance.edit');
 });

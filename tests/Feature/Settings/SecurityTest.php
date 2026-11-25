@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -19,6 +20,8 @@ test('security page is displayed', function () {
 test('password can be updated', function () {
     $user = User::factory()->create();
 
+    DB::table('sessions')->insert(['id' => 'other-session', 'user_id' => $user->id, 'payload' => '', 'last_activity' => now()->timestamp]);
+
     $response = $this
         ->actingAs($user)
         ->from(route('security.edit'))
@@ -33,6 +36,7 @@ test('password can be updated', function () {
         ->assertRedirect(route('security.edit'));
 
     expect(Hash::check('new-password', $user->refresh()->password))->toBeTrue();
+    expect(DB::table('sessions')->where('user_id', $user->id)->count())->toBe(0);
 });
 
 test('correct password must be provided to update password', function () {
