@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Rules\SitePath;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        SitePath::assertValidAdminPath((string) config('vitrina.admin_path'));
+
         $this->configureDefaults();
     }
 
