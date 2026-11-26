@@ -12,6 +12,9 @@ test('the seeder creates generic demo sites and two local admins', function () {
     $admin1 = User::where('email', 'admin1@example.com')->firstOrFail();
     $admin2 = User::where('email', 'admin2@example.com')->firstOrFail();
 
+    expect($admin1->must_change_password)->toBeFalse()
+        ->and($admin2->must_change_password)->toBeFalse();
+
     expect($admin1->sites()->pluck('path')->sort()->values()->all())->toBe(['demo-mercado', 'demo-verde'])
         ->and($admin2->sites()->pluck('path')->sort()->values()->all())->toBe(['demo-bazar', 'demo-super']);
 });

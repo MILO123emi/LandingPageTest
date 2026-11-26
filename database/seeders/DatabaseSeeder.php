@@ -49,5 +49,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin2@example.com',
         ]);
         $admin2->sites()->attach([$sites['demo-super']->id, $sites['demo-bazar']->id]);
+
+        $this->call(DemoContentSeeder::class);
     }
 }
