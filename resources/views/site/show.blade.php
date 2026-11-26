@@ -1,17 +1,23 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $site->name }}</title>
-    <meta name="robots" content="noindex">
-    <style>
-        body { font-family: system-ui, sans-serif; max-width: 40rem; margin: auto; padding: 2rem 1rem; color: #1d1d1f; background: #fbfbfd; }
-        a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; }
-    </style>
-</head>
-<body>
-    <h1>{{ $site->name }}</h1>
-    <p>Sitio en construcción.</p>
-</body>
-</html>
+@php
+    $site = $page->site;
+    $logo = $page->logo();
+    $band = 0;
+@endphp
+<x-layouts.site :title="$site->settings['seo_title'] ?? $site->name" :description="$page->description()" :tokens="$page->tokens">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    @include('site.partials.header')
+
+    <main id="inicio">
+        <span id="contenido"></span>
+        @foreach ($page->body() as $section)
+            @php
+                $content = $section->content;
+                $banded = ! in_array($section->type, [\App\Enums\SectionType::Hero, \App\Enums\SectionType::Slogan], true);
+                $alt = $banded && $band++ % 2 === 1;
+            @endphp
+            @include('site.sections.'.$section->type->value)
+        @endforeach
+    </main>
+
+    @include('site.sections.footer', ['content' => $page->section(\App\Enums\SectionType::Footer)?->content ?? []])
+</x-layouts.site>
