@@ -90,7 +90,7 @@ final class Catalog
         return is_string($value) ? Str::limit(Str::squish($value), self::MAX_TERM, '') : '';
     }
 
-    private static function escapeLike(string $term): string
+    public static function escapeLike(string $term): string
     {
         return str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $term);
     }
