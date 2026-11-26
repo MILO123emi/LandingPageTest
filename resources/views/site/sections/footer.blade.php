@@ -3,7 +3,7 @@
 @endphp
 <footer class="site-footer">
     <div class="wrap">
-        <x-site.brand :site="$site" :logo="$logo" />
+        <x-site.brand :site="$site" :logo="$logo" :href="$brandHref ?? '#inicio'" />
         @if (! empty($content['tagline']))
             <p><x-site.text :value="$content['tagline']" /></p>
         @endif

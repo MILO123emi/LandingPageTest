@@ -219,7 +219,7 @@ p { margin: 0; text-wrap: pretty; }
 .hours span { color: var(--ink); font-weight: 600; }
 
 /* Product state */
-.product .badge { justify-self: start; font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--muted); }
+.badge { justify-self: start; font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--muted); }
 .product .price { font-weight: 700; color: var(--ink); }
 
 /* Home with no published shops yet */
@@ -229,3 +229,73 @@ p { margin: 0; text-wrap: pretty; }
 .skip-link { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: var(--bg); font-weight: 600; text-decoration: none; }
 .skip-link:focus { top: 12px; }
 .hero .eyebrow { margin: 0 0 14px; font-size: .95rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: rgba(255,255,255,.85); }
+
+/* Inner pages: catalog and product (ported from the prototype's catalog.css) */
+.page-solid .site-header { position: sticky; }
+.btn-light-ink { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ink) 18%, transparent); }
+.btn-light-ink:hover { background: var(--surface); }
+.btn-lg { min-height: 56px; padding: 0 32px; font-size: 1.05rem; }
+
+.catalog { padding-block: 24px clamp(72px, 10vw, 120px); }
+.crumbs { display: flex; flex-wrap: wrap; gap: 8px; font-size: .9rem; color: var(--muted); margin-bottom: clamp(24px, 4vw, 40px); }
+.crumbs a { color: inherit; text-decoration: none; }
+.crumbs a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.crumbs [aria-current] { color: var(--ink); font-weight: 600; }
+
+.catalog-head { display: grid; gap: 10px; margin-bottom: 28px; }
+.catalog-head h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); }
+
+.search { position: relative; display: flex; gap: 10px; max-width: 640px; margin-bottom: 20px; }
+.search svg { position: absolute; left: 18px; top: 50%; width: 20px; height: 20px; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.search input[type="search"] {
+  flex: 1; min-width: 0; min-height: 52px; padding: 0 18px 0 48px; border-radius: 999px;
+  border: 1.5px solid color-mix(in srgb, var(--ink) 14%, transparent); background: var(--bg);
+  font: 400 1rem var(--font-body); color: var(--ink);
+}
+.search input[type="search"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent); }
+@media (max-width: 520px) { .search .btn { padding: 0 18px; } }
+
+/* Category chips slide inside their own row on phones; the page never scrolls sideways */
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)) clamp(28px, 4vw, 44px); padding: 4px var(--gutter); }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
+  border-radius: 999px; background: var(--surface); color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem;
+  transition: background-color .2s var(--ease), color .2s var(--ease);
+}
+.chip:hover { background: color-mix(in srgb, var(--primary) 12%, var(--surface)); }
+.chip[aria-current] { background: var(--primary); color: var(--on-primary); }
+.chip-n { font-size: .8rem; font-weight: 600; opacity: .7; }
+
+.product-media { display: block; border-radius: var(--radius-md); overflow: hidden; }
+.product-card .product-media img { transition: transform .5s var(--ease); }
+.product-card:hover .product-media img { transform: scale(1.03); }
+.product-card h3 a { color: var(--ink); text-decoration: none; font-size: inherit; font-weight: inherit; }
+.product-card h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.product .product-cat, .product-cat { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--primary); text-decoration: none; }
+
+.empty { display: grid; gap: 14px; justify-items: start; padding: clamp(32px, 6vw, 64px); border-radius: var(--radius-lg); background: var(--surface); }
+.empty h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.empty p { color: var(--muted); max-width: 60ch; }
+.empty-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+
+.pager { display: flex; align-items: center; justify-content: center; gap: 8px 16px; flex-wrap: wrap; margin-top: clamp(40px, 6vw, 64px); }
+.pager-nums { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.pager a, .pager-step { display: inline-grid; place-items: center; min-width: 44px; min-height: 44px; padding: 0 14px; border-radius: 999px; text-decoration: none; font-weight: 600; color: var(--ink); }
+.pager a:hover { background: var(--surface); }
+.pager a[aria-current] { background: var(--ink); color: var(--bg); }
+.pager-step[aria-disabled] { color: color-mix(in srgb, var(--muted) 55%, transparent); }
+.pager-gap { display: grid; place-items: center; min-width: 24px; color: var(--muted); }
+@media (max-width: 520px) { .pager-step { padding: 0 10px; } }
+
+.pdp { display: grid; gap: clamp(28px, 5vw, 72px); align-items: start; }
+@media (min-width: 880px) { .pdp { grid-template-columns: 1.05fr .95fr; } }
+.pdp-media img, .pdp-media .ph { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-lg); background: var(--surface); }
+.pdp-info { display: grid; gap: 18px; align-content: start; justify-items: start; }
+@media (min-width: 880px) { .pdp-info { position: sticky; top: 104px; padding-top: 12px; } }
+.pdp-info h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+.pdp-price { font-size: 1.5rem; font-weight: 700; color: var(--ink); }
+.pdp-note { color: var(--muted); font-size: .95rem; padding: 14px 16px; border-radius: var(--radius-sm); background: var(--surface); }
+.pdp-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.related { margin-top: clamp(72px, 10vw, 120px); }
+.related h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); margin-bottom: clamp(24px, 4vw, 40px); }

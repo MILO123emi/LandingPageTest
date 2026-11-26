@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property bool $is_visible
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read int|null $products_count
  */
 #[Fillable(['site_id', 'name', 'slug', 'description', 'media_id', 'position', 'is_visible'])]
 class Category extends Model

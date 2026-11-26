@@ -49,18 +49,37 @@ final class SitePage
 
         $mediaIds = $sections->toBase()->flatMap(fn (Section $section): array => $section->mediaIds())
             ->merge($featured->pluck('media_id'))
-            ->merge($categories->pluck('media_id'))
-            ->push($site->settings['logo_media_id'] ?? null)
+            ->merge($categories->pluck('media_id'));
+
+        return new self($site, $sections, self::loadMedia($site, $mediaIds), $featured, $categories, ThemeTokens::for($site));
+    }
+
+    /**
+     * The frame of an inner page (catalog, product): header, footer and theme, plus the
+     * media the page itself asks for. Landing sections are kept only for the footer text.
+     *
+     * @param  iterable<mixed>  $mediaIds
+     */
+    public static function shell(Site $site, iterable $mediaIds = []): self
+    {
+        $sections = Section::query()->published()->where('type', SectionType::Footer)->get();
+
+        return new self($site, $sections, self::loadMedia($site, collect($mediaIds)), new Collection, new Collection, ThemeTokens::for($site));
+    }
+
+    /**
+     * @param  Collection<int, mixed>  $ids
+     * @return Collection<int, Media>
+     */
+    private static function loadMedia(Site $site, Collection $ids): Collection
+    {
+        $ids = $ids->push($site->settings['logo_media_id'] ?? null)
             ->filter(fn (mixed $id): bool => is_numeric($id))
             ->map(fn (mixed $id): int => (int) $id)
             ->unique()
             ->values();
 
-        $media = $mediaIds->isEmpty()
-            ? new Collection
-            : Media::query()->whereIn('id', $mediaIds)->get()->keyBy('id');
-
-        return new self($site, $sections, $media, $featured, $categories, ThemeTokens::for($site));
+        return $ids->isEmpty() ? new Collection : Media::query()->whereIn('id', $ids)->get()->keyBy('id');
     }
 
     /**

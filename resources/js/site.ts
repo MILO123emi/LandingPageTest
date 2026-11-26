@@ -3,11 +3,13 @@
 const header = document.querySelector<HTMLElement>('.site-header');
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const heroImg = document.querySelector<HTMLElement>('.hero-media img');
+// Inner pages (catalog, product) have no hero behind the header, so it stays solid.
+const solid = document.body.classList.contains('page-solid');
 
 const onScroll = (): void => {
     const y = window.scrollY;
 
-    header?.classList.toggle('scrolled', y > 40);
+    header?.classList.toggle('scrolled', solid || y > 40);
 
     if (heroImg && !reduce && y < window.innerHeight) {
         heroImg.style.transform = `translateY(${y * -0.08}px)`;

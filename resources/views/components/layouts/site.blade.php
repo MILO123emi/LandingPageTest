@@ -1,4 +1,4 @@
-@props(['title', 'description' => '', 'tokens' => []])
+@props(['title', 'description' => '', 'tokens' => [], 'bodyClass' => null])
 <!DOCTYPE html>
 <html lang="es-HN">
 <head>
@@ -17,7 +17,7 @@
         <style>:root { {{ \App\Support\Theme\ThemeTokens::inline($tokens) }} }</style>
     @endif
 </head>
-<body>
+<body @if ($bodyClass) class="{{ $bodyClass }}" @endif>
     {{ $slot }}
 </body>
 </html>
